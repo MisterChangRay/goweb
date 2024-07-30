@@ -13,7 +13,7 @@ import (
 func main() {
 
 	// Logging to a file.
-	filename := fmt.Sprintf("logs/gin_%s.log", time.Now().Format("2006_01_02"))
+	filename := fmt.Sprintf("logs/gin_%s.log", time.Now().Format("2006_01_02_150405"))
 	f, _ := os.Create(filename)
 	gin.DefaultWriter = io.MultiWriter(f)
 
