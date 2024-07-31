@@ -13,7 +13,7 @@ go版本: go version go1.22.5 windows/386
 
 
 编译压缩命令
-`go build -ldflags="-s -w" -o server main.go && upx -9 server`
+`go build -ldflags="-s -w" -o server.exe main.go && upx -9 server.exe`
 
 
 使用方式
