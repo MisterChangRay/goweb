@@ -64,7 +64,6 @@ func UpdateKey(c *gin.Context) {
 	if req.TTL > 0 {
 		expireTime = time.Now().Add(time.Second * time.Duration(req.TTL))
 	}
-	fmt.Println("aaaaaaaaaaaaaaa", req.TTL, expireTime)
 
 	res := DoUpdateKey0(req.Key, req.Value, expireTime)
 	c.JSON(http.StatusOK, gin.H{
