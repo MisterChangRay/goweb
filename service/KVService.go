@@ -2,9 +2,10 @@ package service
 
 import (
 	"fmt"
-	config "goweb/config/db"
+	db "goweb/config/db"
 	"goweb/service/pojo"
 	"net/http"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 	"github.com/gin-gonic/gin"
@@ -21,8 +22,8 @@ func GetKey(c *gin.Context) {
 }
 
 func DoGetKey0(key string) *string {
-	u := config.T_keyvalue{Key: key}
-	err := config.DB.Read(&u)
+	u := db.T_keyvalue{Key: key}
+	err := db.DB.Read(&u)
 	if err == nil {
 		return &u.Value
 	}
@@ -32,7 +33,7 @@ func DoGetKey0(key string) *string {
 
 func DoGetKey1(key string) *string {
 	var maps []orm.Params
-	num, err := config.DB.Raw("select value from t_keyvalue where `key` = ? and now() < expire_time ", key).Values(&maps)
+	num, err := db.DB.Raw("select value from t_keyvalue where `key` = ? and now() < expire_time ", key).Values(&maps)
 
 	if err == nil && num > 0 {
 		s := fmt.Sprintln(maps[0]["value"])
@@ -43,9 +44,9 @@ func DoGetKey1(key string) *string {
 }
 
 func DoDeleteKey0(key string) int64 {
-	u := config.T_keyvalue{Key: key}
+	u := db.T_keyvalue{Key: key}
 
-	num, err := config.DB.Delete(&u)
+	num, err := db.DB.Delete(&u)
 	if err == nil {
 		return num
 	}
@@ -54,15 +55,37 @@ func DoDeleteKey0(key string) int64 {
 
 // 接受json参数, 及参数校验
 func AddKey(c *gin.Context) {
-	var req pojo.HelloReq
+	var req pojo.KV
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	res := DoAddKey(req)
+	var code string = "9999"
+	if res == 0 {
+		code = "0000"
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "hello," + req.Name,
+		"code":    code,
+		"message": "okk",
 	})
+}
+
+func DoAddKey(req pojo.KV) int32 {
+	ins := db.T_keyvalue{
+		Key:         req.Key,
+		Value:       req.Value,
+		Create_time: time.Now(),
+		Update_time: time.Now(),
+		Expire_time: time.Now().Add(time.Second * time.Duration(req.TTL)),
+	}
+	_, err := db.DB.Insert(&ins)
+	if err == nil {
+		return 0
+	}
+	return -1
 }
 
 // 路径参数演示 xxxx.com/:name

@@ -11,3 +11,9 @@ type HelloReq struct {
 	// 年龄只能 0 -130区间
 	Age uint32 `form:"age" json:"age" xml:"age" binding:"gte=0,lte=130"`
 }
+
+type KV struct {
+	Key   string `form:"key" json:"key" xml:"key"  binding:"required,max=50,min=1"`
+	Value string `form:"value" json:"value" xml:"value"  binding:"required,max=1024,min=1"`
+	TTL   int32
+}
