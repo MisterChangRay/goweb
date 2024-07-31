@@ -22,6 +22,7 @@ func RegisterRouter(engine *gin.Engine) {
 	v2 := engine.Group("/console")
 	{
 		v2.GET("/getkey", service.GetKey)
+		v2.GET("/delkey", service.DeleteKey)
 
 	}
 

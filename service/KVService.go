@@ -42,9 +42,14 @@ func DoGetKey1(key string) *string {
 	return nil
 }
 
-func doDeleteKey0(key string) {
+func DoDeleteKey0(key string) int64 {
 	u := config.T_keyvalue{Key: key}
-	config.DB.Delete(&u)
+
+	num, err := config.DB.Delete(&u)
+	if err == nil {
+		return num
+	}
+	return -1
 }
 
 // 接受json参数, 及参数校验
@@ -62,9 +67,14 @@ func AddKey(c *gin.Context) {
 
 // 路径参数演示 xxxx.com/:name
 func DeleteKey(c *gin.Context) {
-	name := c.Param("name")
-
+	key := c.Query("key")
+	num := DoDeleteKey0(key)
+	var code string = "0000"
+	if num <= 0 {
+		code = "9999"
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "hello," + name,
+		"code":    code,
+		"message": "done",
 	})
 }
