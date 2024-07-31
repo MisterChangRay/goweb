@@ -11,9 +11,12 @@ import (
 var DB orm.Ormer = nil
 
 // Model Struct
-type User struct {
-	Id   int    `orm:"pk;auto"`
-	Name string `orm:"size(100)"`
+type T_user struct {
+	Id          int    `orm:"pk;auto"`
+	Name        string `orm:"size(100)"`
+	status      int16
+	Create_time time.Time
+	Update_time time.Time
 }
 
 type T_keyvalue struct {
@@ -26,7 +29,7 @@ type T_keyvalue struct {
 
 func InitOrm() {
 	// register model
-	orm.RegisterModel(new(User))
+	orm.RegisterModel(new(T_user))
 	orm.RegisterModel(new(T_keyvalue))
 	orm.Debug = true
 
