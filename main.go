@@ -10,6 +10,7 @@ import (
 	db "goweb/config/db"
 	config "goweb/config/router"
 
+	"github.com/astaxie/beego"
 	"github.com/gin-gonic/gin"
 )
 
@@ -49,5 +50,5 @@ func main() {
 	config.RegisterRouter(r)
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
-	r.Run(":8000")
+	r.Run(":" + beego.AppConfig.String("httpport"))
 }
