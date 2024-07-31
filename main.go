@@ -7,7 +7,8 @@ import (
 	"os"
 	"time"
 
-	"goweb/config"
+	db "goweb/config/db"
+	config "goweb/config/router"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,6 +39,7 @@ func main() {
 			param.ErrorMessage,
 		)
 	}))
+	db.InitOrm()
 
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
