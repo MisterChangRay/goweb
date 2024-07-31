@@ -3,6 +3,7 @@ package config
 import (
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql" // import your used driver
 )
@@ -30,7 +31,7 @@ func InitOrm() {
 	orm.Debug = true
 
 	// set default database
-	orm.RegisterDataBase("default", "mysql", "root:2vKeG&1.3@tcp(47.109.108.16:7501)/fastapi_demo?charset=utf8&timeout=6s&readTimeout=15s&interpolateParams=true&parseTime=true&loc=Local", 30)
+	orm.RegisterDataBase("default", "mysql", beego.AppConfig.String("dburi"), 30)
 
 	// create table
 	orm.RunSyncdb("default", false, true)
