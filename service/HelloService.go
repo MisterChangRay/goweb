@@ -6,7 +6,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
+
+var validate *validator.Validate
 
 func Hello(c *gin.Context) {
 	log.Println("aaa")
@@ -26,6 +29,7 @@ func Hello_formdata(c *gin.Context) {
 	})
 }
 
+// 接受json参数, 及参数校验
 func Hello_jsondata(c *gin.Context) {
 	var req pojo.HelloReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -34,7 +38,7 @@ func Hello_jsondata(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "hello," + req.Account,
+		"message": "hello," + req.Name,
 	})
 }
 

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"goweb/service"
+	service "goweb/service"
 
 	"github.com/gin-gonic/gin"
 )
