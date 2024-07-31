@@ -53,6 +53,41 @@ func DoDeleteKey0(key string) int64 {
 	return -1
 }
 
+// Multipart/Urlencoded Form
+func UpdateKey(c *gin.Context) {
+	var req pojo.KV
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	var expireTime time.Time
+	if req.TTL > 0 {
+		expireTime = time.Now().Add(time.Second * time.Duration(req.TTL))
+	}
+	fmt.Println("aaaaaaaaaaaaaaa", req.TTL, expireTime)
+
+	res := DoUpdateKey0(req.Key, req.Value, expireTime)
+	c.JSON(http.StatusOK, gin.H{
+		"value": res,
+	})
+}
+
+func DoUpdateKey0(key string, value string, time time.Time) int64 {
+	if time.IsZero() {
+		_, err := db.DB.Raw("update t_keyvalue set value = ? , `update_time` = now()  where `key` = ? and now() < expire_time ", value, key).Exec()
+		if err == nil {
+			return 0
+		}
+	} else {
+		_, err := db.DB.Raw("update t_keyvalue set value = ? , `update_time` = now() ,expire_time=? where `key` = ? and now() < expire_time ", value, time, key).Exec()
+		if err == nil {
+			return 0
+		}
+	}
+
+	return -1
+}
+
 // 接受json参数, 及参数校验
 func AddKey(c *gin.Context) {
 	var req pojo.KV
@@ -61,7 +96,7 @@ func AddKey(c *gin.Context) {
 		return
 	}
 
-	res := DoAddKey(req)
+	res := DoAddOrUpdateKey(req)
 	var code string = "9999"
 	if res == 0 {
 		code = "0000"
@@ -73,7 +108,7 @@ func AddKey(c *gin.Context) {
 	})
 }
 
-func DoAddKey(req pojo.KV) int32 {
+func DoAddOrUpdateKey(req pojo.KV) int32 {
 	ins := db.T_keyvalue{
 		Key:         req.Key,
 		Value:       req.Value,
