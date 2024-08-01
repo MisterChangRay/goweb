@@ -10,6 +10,9 @@ go版本: go version go1.22.5 windows/386
 3. 使用启动命令进入快速开发阶段
 4. 打包异地运行时，需要拷贝配置文件目录
 
+### 2. 常用命令
+如果需要压缩，需要提前到github下载upx并添加到path。
+
 启动命令:
 `go run .\main.go .\router.go`
 
