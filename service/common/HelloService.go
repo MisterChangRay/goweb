@@ -1,8 +1,6 @@
-package service
+package common
 
 import (
-	"goweb/service/common"
-	"goweb/service/pojo"
 	"log"
 	"net/http"
 
@@ -11,7 +9,7 @@ import (
 
 func Hello(c *gin.Context) {
 	log.Println("aaa")
-	common.HttpSuccess(c, nil)
+	HttpSuccess(c, nil)
 }
 
 // Multipart/Urlencoded Form
@@ -27,7 +25,7 @@ func Hello_formdata(c *gin.Context) {
 
 // 接受json参数, 及参数校验
 func Hello_jsondata(c *gin.Context) {
-	var req pojo.HelloReq
+	var req HelloReq
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

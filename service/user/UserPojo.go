@@ -1,4 +1,4 @@
-package pojo
+package user
 
 import (
 	"time"

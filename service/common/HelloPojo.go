@@ -1,4 +1,4 @@
-package pojo
+package common
 
 import "time"
 

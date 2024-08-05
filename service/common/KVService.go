@@ -1,9 +1,8 @@
-package service
+package common
 
 import (
 	"fmt"
 	db "goweb/config/db"
-	"goweb/service/pojo"
 	"net/http"
 	"time"
 
@@ -55,7 +54,7 @@ func DoDeleteKey0(key string) int64 {
 
 // Multipart/Urlencoded Form
 func UpdateKey(c *gin.Context) {
-	var req pojo.KV
+	var req KV
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -89,7 +88,7 @@ func DoUpdateKey0(key string, value string, time time.Time) int64 {
 
 // 接受json参数, 及参数校验
 func AddKey(c *gin.Context) {
-	var req pojo.KV
+	var req KV
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -107,7 +106,7 @@ func AddKey(c *gin.Context) {
 	})
 }
 
-func DoAddOrUpdateKey(req pojo.KV) int32 {
+func DoAddOrUpdateKey(req KV) int32 {
 	ins := db.T_keyvalue{
 		Key:         req.Key,
 		Value:       req.Value,
