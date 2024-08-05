@@ -1,21 +1,17 @@
 package service
 
 import (
+	"goweb/service/common"
 	"goweb/service/pojo"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
-
-var validate *validator.Validate
 
 func Hello(c *gin.Context) {
 	log.Println("aaa")
-	c.JSON(http.StatusOK, gin.H{
-		"message": "hello",
-	})
+	common.HttpSuccess(c, nil)
 }
 
 // Multipart/Urlencoded Form

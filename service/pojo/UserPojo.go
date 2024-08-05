@@ -1,7 +1,6 @@
 package pojo
 
 import (
-	"goweb/service/common"
 	"time"
 )
 
@@ -23,7 +22,6 @@ type UserUpdate struct {
 }
 
 type UserList struct {
-	common.BaseRes
 	UserBase
 	UserAdd
 }
