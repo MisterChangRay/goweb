@@ -40,3 +40,6 @@ set GOARCH=amd64
 go build -ldflags="-s -w" -o server_win.exe main.go && upx -9 server_win.exe
 ```
 
+### 3. 其他事项
+
+由于go分包加载，所以项目服务直接写到service目录里下，按功能模块目录划分。结构体和服务直接暴露在一个文件夹下即可
