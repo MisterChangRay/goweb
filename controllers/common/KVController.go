@@ -1,6 +1,7 @@
 package common
 
 import (
+	"context"
 	"fmt"
 	pojos "goweb/controllers"
 	db "goweb/models"
@@ -34,18 +35,27 @@ func (this *KVController) Post() {
 
 	err := this.BindJSON(&req)
 	if err == nil {
+		err := db.MYSQL.DoTx(func(ctx context.Context, txOrm orm.TxOrmer) error {
+			var expireTime time.Time
+			if req.TTL > 0 {
+				expireTime = time.Now().Add(time.Second * time.Duration(req.TTL))
+			}
+			i, err := DoUpdateKey0(req.Key, req.Value, expireTime)
+			if i == 0 {
+				_, err = DoAddKey(req)
+			}
+			return err
+		})
 
-		var expireTime time.Time
-		if req.TTL > 0 {
-			expireTime = time.Now().Add(time.Second * time.Duration(req.TTL))
-		}
-		i := DoUpdateKey0(req.Key, req.Value, expireTime)
-		if i == 0 {
-			DoAddKey(req)
-		}
-
-		res := pojos.BaseRes{
-			Msg: fmt.Sprintf("key %s = %s", req.Key, req.Value),
+		var res pojos.BaseRes
+		if err == nil {
+			res = pojos.BaseRes{
+				Msg: fmt.Sprintf("key %s = %s", req.Key, req.Value),
+			}
+		} else {
+			res = pojos.BaseRes{
+				Msg: fmt.Sprintf("update key %s failed", req.Key),
+			}
 		}
 
 		this.Data["json"] = &res
@@ -103,23 +113,23 @@ func DoDeleteKey0(key string) int64 {
 	return -1
 }
 
-func DoUpdateKey0(key string, value string, time time.Time) int64 {
+func DoUpdateKey0(key string, value string, time time.Time) (int64, error) {
 	if time.IsZero() {
 		_, err := db.MYSQL.Raw("update t_keyvalue set value = ? , `update_time` = now()  where `key` = ? and now() < expire_time ", value, key).Exec()
 		if err == nil {
-			return 0
+			return 1, err
 		}
 	} else {
 		_, err := db.MYSQL.Raw("update t_keyvalue set value = ? , `update_time` = now() ,expire_time=? where `key` = ? and now() < expire_time ", value, time, key).Exec()
 		if err == nil {
-			return 0
+			return 1, err
 		}
 	}
 
-	return -1
+	return -1, nil
 }
 
-func DoAddKey(req KV) int32 {
+func DoAddKey(req KV) (int32, error) {
 	ins := db.T_keyvalue{
 		Key:         req.Key,
 		Value:       req.Value,
@@ -129,7 +139,7 @@ func DoAddKey(req KV) int32 {
 	}
 	_, err := db.MYSQL.Insert(&ins)
 	if err == nil {
-		return 0
+		return 0, err
 	}
-	return -1
+	return -1, err
 }

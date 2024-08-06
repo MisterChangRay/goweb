@@ -42,6 +42,7 @@ func InitOrm() {
 		// create table
 		orm.RunSyncdb("default", false, true)
 		MYSQL = orm.NewOrm()
+
 	}
 
 }
