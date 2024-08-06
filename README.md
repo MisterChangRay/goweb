@@ -17,10 +17,10 @@ go版本: go version go1.22.5 windows/386
 如果需要压缩，需要提前到github下载upx并添加到path。
 
 启动命令:
-`go run .\main.go .\router.go`
+`go run .\main.go`
 
 编译命令:
-`go build .\main.go .\router.go `
+`go build .\main.go  `
 
 
 编译压缩命令
