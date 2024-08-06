@@ -4,6 +4,8 @@
 
 go版本: go version go1.22.5 windows/386
 
+项目升级到 beegov2，[官方文档地址：](https://beego.wiki/docs/quickstart/)
+
 ### 1.使用方式
 1. 导入conf 目录下的sql文件
 2. 配置conf目录下的app.conf,修改数据库连接信息
