@@ -1,14 +1,14 @@
-package config
+package models
 
 import (
 	"time"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
+	beego "github.com/beego/beego/v2/server/web"
 	_ "github.com/go-sql-driver/mysql" // import your used driver
 )
 
-var DB orm.Ormer = nil
+var MYSQL orm.Ormer = nil
 
 // Model Struct
 type T_user struct {
@@ -33,11 +33,14 @@ func InitOrm() {
 	orm.RegisterModel(new(T_keyvalue))
 	orm.Debug = true
 
-	// set default database
-	orm.RegisterDataBase("default", "mysql", beego.AppConfig.String("dburi"), 30)
+	dburl, err := beego.AppConfig.String("dburi")
+	if err == nil {
+		// set default database
+		orm.RegisterDataBase("default", "mysql", dburl)
 
-	// create table
-	orm.RunSyncdb("default", false, true)
-	DB = orm.NewOrm()
+		// create table
+		orm.RunSyncdb("default", false, true)
+		MYSQL = orm.NewOrm()
+	}
 
 }
