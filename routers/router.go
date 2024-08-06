@@ -1,8 +1,8 @@
 package routers
 
 import (
-	"goweb2/controllers"
-	"goweb2/controllers/common"
+	"goweb/controllers"
+	"goweb/controllers/common"
 
 	beego "github.com/beego/beego/v2/server/web"
 )

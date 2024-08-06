@@ -2,8 +2,8 @@ package common
 
 import (
 	"fmt"
-	pojos "goweb2/controllers"
-	db "goweb2/models"
+	pojos "goweb/controllers"
+	db "goweb/models"
 	"time"
 
 	"github.com/beego/beego/v2/client/orm"

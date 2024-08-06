@@ -1,7 +1,7 @@
 package common
 
 import (
-	pojos "goweb2/controllers"
+	pojos "goweb/controllers"
 
 	beego "github.com/beego/beego/v2/server/web"
 )

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"goweb2/models"
-	_ "goweb2/models"
-	_ "goweb2/routers"
+	"goweb/models"
+	_ "goweb/models"
+	_ "goweb/routers"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
