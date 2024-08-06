@@ -10,7 +10,7 @@ import (
 
 var MYSQL orm.Ormer = nil
 
-// Model Struct
+// 数据库表单定义
 type T_user struct {
 	Id          int    `orm:"pk;auto"`
 	Name        string `orm:"size(100)"`
@@ -27,6 +27,7 @@ type T_keyvalue struct {
 	Expire_time time.Time
 }
 
+// 初始化数据库相关代码
 func InitOrm() {
 	// register model
 	orm.RegisterModel(new(T_user))
