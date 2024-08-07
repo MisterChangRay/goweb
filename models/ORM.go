@@ -28,7 +28,7 @@ type T_keyvalue struct {
 }
 
 // 初始化数据库相关代码
-func InitOrm() {
+func init() {
 	// register model
 	orm.RegisterModel(new(T_user))
 	orm.RegisterModel(new(T_keyvalue))

@@ -115,14 +115,16 @@ func DoDeleteKey0(key string) int64 {
 
 func DoUpdateKey0(key string, value string, time time.Time) (int64, error) {
 	if time.IsZero() {
-		_, err := db.MYSQL.Raw("update t_keyvalue set value = ? , `update_time` = now()  where `key` = ? and now() < expire_time ", value, key).Exec()
+		res, err := db.MYSQL.Raw("update t_keyvalue set value = ? , `update_time` = now()  where `key` = ? and now() < expire_time ", value, key).Exec()
 		if err == nil {
-			return 1, err
+			i, _ := res.RowsAffected()
+			return i, err
 		}
 	} else {
-		_, err := db.MYSQL.Raw("update t_keyvalue set value = ? , `update_time` = now() ,expire_time=? where `key` = ? and now() < expire_time ", value, time, key).Exec()
+		res, err := db.MYSQL.Raw("update t_keyvalue set value = ? , `update_time` = now() ,expire_time=? where `key` = ? and now() < expire_time ", value, time, key).Exec()
 		if err == nil {
-			return 1, err
+			i, _ := res.RowsAffected()
+			return i, err
 		}
 	}
 

@@ -1,7 +1,9 @@
 package common
 
 import (
+	"encoding/json"
 	pojos "goweb/controllers"
+	"goweb/pkg/logger"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
@@ -15,6 +17,8 @@ func (this *HelloController) Formdata() {
 
 	err := this.BindForm(&req)
 	if err == nil {
+		jsondata, _ := json.Marshal(req)
+		logger.Log.Debug("收到请求 %s", string(jsondata))
 		res := pojos.BaseRes{
 			Msg: req.Name,
 		}
