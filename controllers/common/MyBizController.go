@@ -63,6 +63,9 @@ func (this *MyBizController) WXMessage() {
 func (this *MyBizController) dealMsg(realmsg RealMsg) {
 	if strings.HasPrefix(realmsg.Content, "记账") {
 		res := strings.Split(realmsg.Content, " ")
+		if len(res) < 3 {
+			return
+		}
 
 		db.MYSQL.Insert(&db.Accounting{
 			Uid:         realmsg.FromUserName,
