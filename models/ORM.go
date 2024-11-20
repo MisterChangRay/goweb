@@ -27,6 +27,14 @@ type T_keyvalue struct {
 	Expire_time time.Time
 }
 
+type Members struct {
+	Name        string `orm:"pk;size(255)"`
+	Phone       string `orm:"size(255)"`
+	Birthday    int    `orm:"int"`
+	Birthyear   string `orm:"int"`
+	Create_time time.Time
+}
+
 // 初始化数据库相关代码
 func init() {
 	// register model
