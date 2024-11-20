@@ -17,7 +17,13 @@ func init() {
 			beego.NSRouter("/pathparam/:name", &common.HelloController{}, "get,post:PathParam"),
 			beego.NSRouter("/queryparam", &common.HelloController{}, "get,post:Queryparam"),
 		),
+		beego.NSNamespace("/mydb",
+			beego.NSRouter("/wxtestCall", &common.MyBizController{}, "get:WXtestCall"),
+			beego.NSRouter("/wxtestCall", &common.MyBizController{}, "post:WXMessage"),
+		),
 		beego.NSRouter("/kvsetting", &common.KVController{}),
 	)
+
 	beego.AddNamespace(v1api)
+
 }

@@ -35,11 +35,22 @@ type Members struct {
 	Create_time time.Time
 }
 
+type Accounting struct {
+	Id          uint32 `pk;orm:"int"`
+	Uid         string `orm:"size(255)"`
+	Remark      string `orm:"size(255)"`
+	Money       string `orm:"decimal"`
+	Create_time time.Time
+	User        string `orm:"size(255)"`
+}
+
 // 初始化数据库相关代码
 func init() {
 	// register model
 	orm.RegisterModel(new(T_user))
 	orm.RegisterModel(new(T_keyvalue))
+	orm.RegisterModel(new(Members))
+	orm.RegisterModel(new(Accounting))
 	orm.Debug = true
 
 	dburl, err := beego.AppConfig.String("dburi")
