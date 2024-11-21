@@ -28,7 +28,7 @@ type T_keyvalue struct {
 }
 
 type Members struct {
-	Name        string `orm:"pk;size(255)"`
+	Name        string `orm:"size(255)"`
 	Phone       string `orm:"size(255)"`
 	Birthday    int    `orm:"int"`
 	Birthyear   string `orm:"int"`

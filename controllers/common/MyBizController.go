@@ -7,12 +7,15 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/xml"
+	"fmt"
 	db "goweb/models"
 	"goweb/pkg/logger"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Lofanmi/chinese-calendar-golang/calendar"
 	beego "github.com/beego/beego/v2/server/web"
 )
 
@@ -74,6 +77,30 @@ func (this *MyBizController) dealMsg(realmsg RealMsg) {
 			Create_time: time.Now(),
 			Money:       price,
 			Remark:      remark,
+		})
+	}
+
+	if strings.HasPrefix(realmsg.Content, "添加生日") {
+		substring := strings.Split(realmsg.Content, "添加生日")[1]
+		re := regexp.MustCompile(`\d+(\.\d+)?`)
+		yearmonthday := re.FindStringSubmatch(substring)[0]
+		name := strings.Replace(substring, yearmonthday, "", 1)
+
+		// 定义一个时间字符串
+		timeStr := yearmonthday + " 15:04:05"
+		// 定义一个时间格式
+		layout := "20060102 15:04:05"
+		// 使用Parse根据格式转换字符串到time.Time类型
+		now1, _ := time.Parse(layout, timeStr)
+
+		now := calendar.ByTimestamp(now1.Unix())
+
+		birth, _ := strconv.Atoi(fmt.Sprintf("%02d%02d", now.Lunar.GetMonth(), now.Lunar.GetDay()))
+		db.MYSQL.Insert(&db.Members{
+			Name:        name,
+			Birthday:    birth,
+			Create_time: time.Now(),
+			Birthyear:   "1992",
 		})
 	}
 
