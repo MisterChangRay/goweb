@@ -9,6 +9,7 @@ import (
 	"encoding/xml"
 	db "goweb/models"
 	"goweb/pkg/logger"
+	"regexp"
 	"strings"
 	"time"
 
@@ -62,17 +63,17 @@ func (this *MyBizController) WXMessage() {
 
 func (this *MyBizController) dealMsg(realmsg RealMsg) {
 	if strings.HasPrefix(realmsg.Content, "记账") {
-		res := strings.Split(realmsg.Content, " ")
-		if len(res) < 3 {
-			return
-		}
+		substring := strings.Split(realmsg.Content, "记账")[1]
+		re := regexp.MustCompile(`\d+(\.\d+)?`)
+		price := re.FindStringSubmatch(substring)[0]
+		remark := strings.Replace(substring, price, "", 1)
 
 		db.MYSQL.Insert(&db.Accounting{
 			Uid:         realmsg.FromUserName,
 			User:        realmsg.FromUserName,
 			Create_time: time.Now(),
-			Money:       res[2],
-			Remark:      res[1],
+			Money:       price,
+			Remark:      remark,
 		})
 	}
 
