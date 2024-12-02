@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"bytes"
 	"fmt"
 	_ "goweb/models"
 	db "goweb/models"
@@ -50,8 +51,20 @@ func birthday() {
 	}
 	msg = nowmsg + msg
 
-	requestURL := fmt.Sprintf("http://47.109.108.16:7517/wecomchan?sendkey=Wkiren23714_JJs&msg=%s&msg_type=text", url.QueryEscape(msg))
-	http.Get(requestURL)
 	// logger.Log.Debug("收到请求 %v", msg)
+	sendQun(msg)
+}
+
+func sendQun(contet string) {
+	// 发送群消息
+	tmp := fmt.Sprintf(`{"msgtype": "text","text": {"content": "%s"}}`, contet)
+
+	http.Post("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=ac533940-9698-4622-a59b-bc9f880270a4", "application/json", bytes.NewBuffer([]byte(tmp)))
+
+}
+
+func sendMy(content string) {
+	requestURL := fmt.Sprintf("http://47.109.108.16:7517/wecomchan?sendkey=Wkiren23714_JJs&msg=%s&msg_type=text", url.QueryEscape(content))
+	http.Get(requestURL)
 
 }
