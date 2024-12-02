@@ -64,6 +64,7 @@ func sendQun(contet string) {
 }
 
 func sendMy(content string) {
+	// 发送私聊推送
 	requestURL := fmt.Sprintf("http://47.109.108.16:7517/wecomchan?sendkey=Wkiren23714_JJs&msg=%s&msg_type=text", url.QueryEscape(content))
 	http.Get(requestURL)
 
