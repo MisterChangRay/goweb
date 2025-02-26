@@ -18,8 +18,8 @@ import (
 
 func init() {
 	s := gocron.NewScheduler()
-	// s.Every(1).Days().At("09:00:00").Do(birthday)
-	s.Every(1).Seconds().Do(birthday)
+	s.Every(1).Days().At("09:00:00").Do(birthday)
+	// s.Every(1).Seconds().Do(birthday)
 	s.Start()
 }
 
