@@ -21,6 +21,9 @@ func init() {
 			beego.NSRouter("/wxtestCall", &common.MyBizController{}, "get:WXtestCall"),
 			beego.NSRouter("/wxtestCall", &common.MyBizController{}, "post:WXMessage"),
 		),
+		beego.NSNamespace("/mycar",
+			beego.NSRouter("/list", &common.CarController{}, "get:QueryCars"),
+		),
 		beego.NSRouter("/kvsetting", &common.KVController{}),
 	)
 

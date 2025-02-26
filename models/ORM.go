@@ -46,6 +46,14 @@ type Accounting struct {
 	User        string `orm:"size(255)"`
 }
 
+type Mycar struct {
+	Id          uint32 `pk;orm:"int"`
+	Name        string `orm:"size(255)"`
+	Car         string `orm:"size(255)"`
+	Phone       string `orm:"size(255)"`
+	Create_time time.Time
+}
+
 // 初始化数据库相关代码
 func init() {
 	// register model
