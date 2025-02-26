@@ -11,6 +11,7 @@ import (
 	db "goweb/models"
 	"goweb/pkg/logger"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -95,7 +96,9 @@ func (this *MyBizController) dealMsg(realmsg RealMsg) {
 		now := calendar.ByTimestamp(now1.Unix())
 
 		birth := fmt.Sprintf("%02d%02d", now.Lunar.GetMonth(), now.Lunar.GetDay())
+		year := strconv.Itoa(time.Now().Year())
 		db.MYSQL.Insert(&db.Members{
+			Year:        year,
 			Name:        name,
 			Birthday:    birth,
 			Create_time: time.Now(),
