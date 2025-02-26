@@ -28,10 +28,12 @@ type T_keyvalue struct {
 }
 
 type Members struct {
+	Id          uint32 `pk;orm:"int"`
 	Name        string `orm:"size(255)"`
 	Phone       string `orm:"size(255)"`
-	Birthday    int    `orm:"int"`
-	Birthyear   string `orm:"int"`
+	Birthday    string `orm:"size(4)"`
+	Birthyear   string `orm:"size(4)"`
+	Year        string `orm:"size(4)"`
 	Create_time time.Time
 }
 

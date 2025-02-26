@@ -18,7 +18,8 @@ import (
 
 func init() {
 	s := gocron.NewScheduler()
-	s.Every(1).Days().At("09:00:00").Do(birthday)
+	// s.Every(1).Days().At("09:00:00").Do(birthday)
+	s.Every(1).Seconds().Do(birthday)
 	s.Start()
 }
 
@@ -28,13 +29,14 @@ func birthday() {
 	// 1. ByTimestamp
 	// 时间戳
 	now := calendar.ByTimestamp(t.Unix())
-	md1, _ := strconv.Atoi(fmt.Sprintf("%02d", int64(now.Lunar.GetMonth())) + fmt.Sprintf("%02d", int64(now.Lunar.GetDay())))
+	md1 := fmt.Sprintf("%04d%02d%02d", int64(now.Lunar.GetYear()), int64(now.Lunar.GetMonth()), int64(now.Lunar.GetDay()))
 	now2 := calendar.ByTimestamp(t.Unix() + int64(7*24*60*60))
-	md2, _ := strconv.Atoi(fmt.Sprintf("%02d", int64(now2.Lunar.GetMonth())) + fmt.Sprintf("%02d", int64(now2.Lunar.GetDay())))
+	md2 := fmt.Sprintf("%04d%02d%02d", int64(now2.Lunar.GetYear()), int64(now2.Lunar.GetMonth()), int64(now2.Lunar.GetDay()))
+	// md2, _ := strconv.Atoi(fmt.Sprintf("%02d", int64(now2.Lunar.GetMonth())) + fmt.Sprintf("%02d", int64(now2.Lunar.GetDay())))
 
 	var lists []db.Members
 
-	num, err := db.MYSQL.Raw("select * from members where `birthday` >= ? and `birthday` <= ? ", md1, md2).QueryRows(&lists)
+	num, err := db.MYSQL.Raw("select * from members where CONCAT(year, birthday) >= ? and CONCAT(year, birthday) <= ? ", md1, md2).QueryRows(&lists)
 	if err != nil || num == 0 {
 		return
 	}
@@ -42,10 +44,19 @@ func birthday() {
 	msg := ""
 	nowmsg := ""
 	for _, v := range lists {
-		if v.Birthday == md1 {
+		yd := fmt.Sprintf("%s%s", v.Year, v.Birthday)
+		if yd == md1 {
 			nowmsg += fmt.Sprintf("%s 今天生日!\r\n", v.Name)
+			y, _ := strconv.Atoi(v.Year)
+			y = y + 1
+			db.MYSQL.Raw("update members set year = ? where id = ?", y, v.Id).Exec()
 		} else {
-			msg += fmt.Sprintf("%s 还有 %d 天生日!\r\n", v.Name, v.Birthday-md1)
+			t1, _ := time.Parse("20060102", md1)
+			t2, _ := time.Parse("20060102", fmt.Sprintf("%s%s", v.Year, v.Birthday))
+
+			diff := int(t2.Sub(t1).Hours() / 24)
+
+			msg += fmt.Sprintf("%s 还有 %d 天生日!\r\n", v.Name, diff)
 
 		}
 	}
